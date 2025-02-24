@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header>
       <q-toolbar elevated class="bg-primary text-white">
-        <q-toolbar-title> Gym Buddy</q-toolbar-title>
+        <q-toolbar-title> <q-avatar> </q-avatar> Gym Buddy</q-toolbar-title>
       </q-toolbar>
     </q-header>
 
