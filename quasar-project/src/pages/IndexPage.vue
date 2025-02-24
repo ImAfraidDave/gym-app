@@ -6,14 +6,14 @@
     <q-btn color="primary" label="Progress" />
     <q-btn label="Start Timer" @click="startTimer" />
     <q-btn label="Stop Timer" @click="stopTimer" />
-    <p>Timer: {{ time }}</p>
+    <p>Timer: {{ formattedTime }}</p>
   </q-page>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-const time = ref(0)
+const time = ref(5500)
 let interval
 
 const startTimer = () => {
@@ -28,7 +28,21 @@ const stopTimer = () => {
   clearInterval(interval)
 }
 
+function formatTimeUnit(unit) {
+  return unit < 10 ? '0' + unit : unit
+}
+
 const startWorkout = () => {
   startTimer()
 }
+
+function formatTime(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  return `${formatTimeUnit(hours)}:${formatTimeUnit(minutes)}:${formatTimeUnit(seconds)}`
+}
+
+const formattedTime = computed(() => formatTime(time.value))
 </script>
