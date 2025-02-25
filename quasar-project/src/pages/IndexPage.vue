@@ -13,7 +13,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-const time = ref(5500)
+const time = ref(0)
 let interval
 
 const startTimer = () => {
@@ -29,7 +29,7 @@ const stopTimer = () => {
 }
 
 function formatTimeUnit(unit) {
-  return unit < 10 ? '0' + unit : unit
+  return unit < 10 ? '0' + unit : unit // if number is less than 10, add a leading 0
 }
 
 const startWorkout = () => {
