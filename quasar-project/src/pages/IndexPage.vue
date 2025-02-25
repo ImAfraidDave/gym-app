@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <q-btn color="primary" label="Start Empty Workout" @click="startWorkout" />
-    <label>Routines</label>
+    <q-btn label="Finish Workout" @click="stopWorkout" />
     <q-btn label="Start Timer" @click="startTimer" />
     <q-btn label="Stop Timer" @click="stopTimer" />
     <p>Timer: {{ formattedTime }}</p>
@@ -9,38 +9,46 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed } from 'vue';
 
-const time = ref(0)
-let interval
+const time = ref(0);
+let interval;
 
 const startTimer = () => {
-  if (interval) clearInterval(interval)
+  if (interval) clearInterval(interval);
 
   interval = setInterval(() => {
-    time.value += 1
-  }, 1000)
-}
+    time.value += 1;
+  }, 1000);
+};
 
 const stopTimer = () => {
-  clearInterval(interval)
-}
+  clearInterval(interval);
+};
 
 function formatTimeUnit(unit) {
-  return unit < 10 ? '0' + unit : unit // if number is less than 10, add a leading 0
+  return unit < 10 ? '0' + unit : unit; // if number is less than 10, add a leading 0
 }
 
 const startWorkout = () => {
-  startTimer()
-}
+  startTimer();
+};
+
+const stopWorkout = () => {
+  stopTimer();
+  var currWorkout = {};
+  currWorkout.time = time.value;
+  console.log(currWorkout); // for debugging, print the current workout data to the console log
+  time.value = 0;
+};
 
 function formatTime(totalSeconds) {
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
-  return `${formatTimeUnit(hours)}:${formatTimeUnit(minutes)}:${formatTimeUnit(seconds)}`
+  return `${formatTimeUnit(hours)}:${formatTimeUnit(minutes)}:${formatTimeUnit(seconds)}`;
 }
 
-const formattedTime = computed(() => formatTime(time.value))
+const formattedTime = computed(() => formatTime(time.value));
 </script>
