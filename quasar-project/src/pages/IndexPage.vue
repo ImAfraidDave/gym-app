@@ -2,8 +2,6 @@
   <q-page class="flex flex-center">
     <q-btn color="primary" label="Start Empty Workout" @click="startWorkout" />
     <label>Routines</label>
-    <q-btn color="primary" label="History" />
-    <q-btn color="primary" label="Progress" />
     <q-btn label="Start Timer" @click="startTimer" />
     <q-btn label="Stop Timer" @click="stopTimer" />
     <p>Timer: {{ formattedTime }}</p>

@@ -15,7 +15,7 @@
         <q-btn-group push outline square spread>
           <q-btn :icon="matHome" stack>Home</q-btn>
           <q-btn :icon="matCalendarMonth" stack>History</q-btn>
-          <q-btn :icon="matAdd" stack>Workout</q-btn>
+          <q-btn :icon="matFitnessCenter" stack>Workout</q-btn>
           <q-btn :icon="matTrendingUp" stack>Progress</q-btn>
         </q-btn-group>
       </q-toolbar>
@@ -23,5 +23,10 @@
   </q-layout>
 </template>
 <script setup>
-import { matHome, matCalendarMonth, matAdd, matTrendingUp } from '@quasar/extras/material-icons'
+import {
+  matHome,
+  matCalendarMonth,
+  matFitnessCenter,
+  matTrendingUp,
+} from '@quasar/extras/material-icons'
 </script>
