@@ -82,27 +82,13 @@ const stopWorkout = () => {
 };
 
 var exercises = []; // the exercises of the current workout.
-// const repCount = ref(null);
-// const weight = ref(null);
-
-// /**
-//  * Adds a set to the current workout.
-//  */
-// const addExercise = () => {
-//   var exercise = {};
-//   // exercise.name = // get the exercise name
-//   exercise.reps = repCount.value;
-//   exercise.weight = weight.value;
-//   exercise.number = exerciseNumber++; // keeps track of order of exercises
-//   exercises.push(exercise);
-// };
 
 const saveToLocalStorage = () => {
   localStorage.setItem('sets', JSON.stringify(sets.value));
 };
 
 // if there are saved sets in localStorage, use those, otherwise start with 1 blank set
-const sets = ref([JSON.parse(localStorage.getItem('sets')) || [{ repCount: '', weight: '' }]]);
+const sets = ref(JSON.parse(localStorage.getItem('sets')) || [{ repCount: '', weight: '' }]);
 
 const addSet = () => {
   sets.value.push({ repCount: '', weight: '' });
