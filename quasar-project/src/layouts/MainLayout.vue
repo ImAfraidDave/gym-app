@@ -28,5 +28,5 @@ import {
   matCalendarMonth,
   matFitnessCenter,
   matTrendingUp,
-} from '@quasar/extras/material-icons'
+} from '@quasar/extras/material-icons';
 </script>
