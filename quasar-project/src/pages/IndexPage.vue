@@ -27,6 +27,13 @@
           @update:model-value="saveToLocalStorage"
         />
         <q-btn :icon="matDelete" @click="deleteSet(index)" />
+        <!-- Show the add set button if it's the last consecutive set of its respective exercise -->
+        <q-btn
+          :icon="matAdd"
+          v-if="index === sets.length - 1 || sets[index + 1].exerciseName !== set.exerciseName"
+          label="Add Set"
+          @click="addSet(set.exerciseName)"
+        />
       </div>
     </q-card-section>
   </q-page>
@@ -70,14 +77,18 @@ const stopWorkout = () => {
     sets: sets.value,
   };
 
-  // save the sets to localStorage
-  const workoutData = localStorage.getItem('workoutData');
-  if (!workoutData) {
-    // if no historic data, make new array to save historic data
-    workoutData.value = [];
-  }
-  workoutData.value.push(workout);
-  localStorage.setItem('workoutData', workoutData);
+  let previousWorkouts = localStorage.getItem('previousWorkouts');
+  // if historic data exists, use it, otherwise create blank array to use
+  previousWorkouts = previousWorkouts ? JSON.parse(previousWorkouts) : [];
+  previousWorkouts.push(workout);
+  localStorage.setItem('previousWorkouts', JSON.stringify(previousWorkouts));
+
+  // let previousSets = localStorage.getItem('previousSets');
+  // // if historic data exists, use it, otherwise create blank array to use
+  // previousSets = previousSets ? JSON.parse(previousSets) : [];
+  // // pushes with spread, this means that the arrays are combined
+  // previousSets.push(...sets);
+  // localStorage.setItem('previousSets', JSON.stringify(previousSets));
 
   time.value = 0;
   sets.value = [];
