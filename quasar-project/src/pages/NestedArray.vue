@@ -29,6 +29,7 @@
           <q-btn :icon="matDelete" @click="deleteSet(exercise, index)" />
         </div>
         <q-btn :icon="matAdd" label="Add Set" @click="addSet(exercise)" />
+        <q-btn :icon="matDelete" label="Delete Exercise" @click="deleteExercise(id)" />
       </div>
     </q-card-section>
   </q-page>
@@ -52,6 +53,11 @@ const addExercise = (exerciseName) => {
 
   exercises.value.push(exercise);
   addSet(exercise);
+};
+
+const deleteExercise = (id) => {
+  exercises.value.splice(id, 1);
+  saveToLocalStorage();
 };
 
 const addSet = (exercise) => {
