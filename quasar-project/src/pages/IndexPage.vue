@@ -64,7 +64,20 @@ const startWorkout = () => {
 const stopWorkout = () => {
   stopTimer();
 
+  const workout = {
+    date: new Date().toLocaleString(),
+    duration: time.value,
+    sets: sets.value,
+  };
+
   // save the sets to localStorage
+  const workoutData = localStorage.getItem('workoutData');
+  if (!workoutData) {
+    // if no historic data, make new array to save historic data
+    workoutData.value = [];
+  }
+  workoutData.value.push(workout);
+  localStorage.setItem('workoutData', workoutData);
 
   time.value = 0;
   sets.value = [];
