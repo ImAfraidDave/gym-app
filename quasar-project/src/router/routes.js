@@ -6,9 +6,9 @@ const routes = [
   },
 
   {
-    path: '/nested',
+    path: '/workout',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/NestedArray.vue') }],
+    children: [{ path: '', component: () => import('src/pages/WorkoutPage.vue') }],
   },
 
   // Always leave this as last one,
