@@ -1,25 +1,28 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card>
-      <h3>Past Workouts</h3>
-      <p>Here you can view your past workouts.</p>
-
+    <main>
       <div v-for="(workout, id) in pastWorkouts" v-bind:key="id">
         <q-card>
-          <p>{{ convertTimestamp(workout.dateTime) }}</p>
-          <div v-for="(exercise, exerciseId) in workout.exercises" v-bind:key="exerciseId">
+          <q-card-section>
+            <div class="text-h6">{{ convertTimestamp(workout.dateTime) }}</div>
+            <div class="text-p">{{ workout.duration }}m</div>
+          </q-card-section>
+          <q-separator />
+          <q-card-section
+            v-for="(exercise, exerciseId) in workout.exercises"
+            v-bind:key="exerciseId"
+          >
             <q-card>
-              <q-card-section>
-                <div class="text-h6">{{ exercise.exerciseName }}</div>
-              </q-card-section>
-              <div v-for="(set, index) in exercise.sets" v-bind:key="index">
-                <p>{{ set.reps }} x {{ set.weight }}kg</p>
-              </div>
+              <div class="text-h6">{{ exercise.exerciseName }}</div>
+              <q-separator />
+              <ul v-for="(set, index) in exercise.sets" v-bind:key="index">
+                <li>{{ set.reps }} x {{ set.weight }}kg</li>
+              </ul>
             </q-card>
-          </div>
+          </q-card-section>
         </q-card>
       </div>
-    </q-card>
+    </main>
   </q-page>
 </template>
 <script setup>
