@@ -7,6 +7,16 @@
       <div v-for="(workout, id) in pastWorkouts" v-bind:key="id">
         <q-card>
           <p>{{ convertTimestamp(workout.dateTime) }}</p>
+          <div v-for="(exercise, exerciseId) in workout.exercises" v-bind:key="exerciseId">
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">{{ exercise.exerciseName }}</div>
+              </q-card-section>
+              <div v-for="(set, index) in exercise.sets" v-bind:key="index">
+                <p>{{ set.reps }} x {{ set.weight }}kg</p>
+              </div>
+            </q-card>
+          </div>
         </q-card>
       </div>
     </q-card>
