@@ -94,9 +94,9 @@ const startWorkout = () => {
   startTime = Date.now();
   exercises.value = []; // as a new workout is started, discard the current exercises from the previous workout
   activeWorkout = true;
-  localStorage.setItem('exercises', null);
-  localStorage.setItem('activeWorkout', activeWorkout);
-  localStorage.setItem('startTime', startTime);
+  localStorage.setItem('exercises', JSON.stringify(exercises.value));
+  localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout));
+  localStorage.setItem('startTime', JSON.stringify(startTime));
 };
 
 const stopWorkout = () => {
@@ -125,12 +125,11 @@ const stopWorkout = () => {
   // exercises.value = [];
   // duration = Date.now() - startTime;
   activeWorkout = false;
-  localStorage.setItem('activeWorkout', activeWorkout);
+  localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout));
 };
 
 const startTimer = () => {
   if (interval.value) clearInterval(interval.value);
-
   interval.value = setInterval(() => {
     time.value += 1;
   }, 1000);
