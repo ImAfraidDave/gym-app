@@ -56,6 +56,9 @@ const time = ref(0);
 const interval = ref(null);
 const exerciseName = ref('');
 
+let startTime = null;
+let activeWorkout = false;
+
 const addExercise = (exerciseName) => {
   const exercise = {
     exerciseName: exerciseName,
@@ -87,7 +90,12 @@ const saveToLocalStorage = () => {
 
 const startWorkout = () => {
   startTimer();
+  time.value = 0;
+  startTime = Date.now();
   exercises.value = []; // as a new workout is started, discard the current exercises from the previous workout
+  activeWorkout = true;
+  localStorage.setItem('activeWorkout', activeWorkout);
+  localStorage.setItem('startTime', startTime);
 };
 
 const stopWorkout = () => {
@@ -114,6 +122,9 @@ const stopWorkout = () => {
 
   // time.value = 0;
   // exercises.value = [];
+  // duration = Date.now() - startTime;
+  activeWorkout = false;
+  localStorage.setItem('activeWorkout', activeWorkout);
 };
 
 const startTimer = () => {
@@ -146,6 +157,15 @@ onMounted(() => {
   const savedExercises = localStorage.getItem('exercises');
   if (savedExercises) {
     exercises.value = JSON.parse(savedExercises);
+  }
+  const savedStartTime = localStorage.getItem('startTime');
+  if (savedStartTime) {
+    time.value = Math.floor((Date.now() - Number(savedStartTime)) / 1000);
+  }
+  const savedActiveWorkout = localStorage.getItem('activeWorkout');
+  if (savedActiveWorkout && JSON.parse(savedActiveWorkout)) {
+    activeWorkout = true;
+    startTimer();
   }
 });
 </script>
