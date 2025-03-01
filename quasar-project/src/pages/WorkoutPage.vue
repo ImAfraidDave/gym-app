@@ -9,11 +9,16 @@
           v-if="!activeWorkout"
           @click="startWorkout"
         />
-        <q-input v-model="exerciseName" type="text" label="Exercise" />
-        <q-btn :icon="matAdd" label="Add Exercise" @click="addExercise(exerciseName)" />
-        <p>Timer: {{ formattedTime }}</p>
+        <q-input v-model="exerciseName" type="text" label="Exercise" v-if="activeWorkout" />
+        <q-btn
+          :icon="matAdd"
+          label="Add Exercise"
+          @click="addExercise(exerciseName)"
+          v-if="activeWorkout"
+        />
+        <p v-if="activeWorkout">Timer: {{ formattedTime }}</p>
       </section>
-      <section class="workoutSection">
+      <section class="workoutSection" v-if="activeWorkout">
         <div v-for="(exercise, id) in exercises" v-bind:key="id">
           <q-card>
             <q-card-section>
