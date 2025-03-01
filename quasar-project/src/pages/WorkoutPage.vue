@@ -98,7 +98,7 @@ const startWorkout = () => {
   exercises.value = []; // as a new workout is started, discard the current exercises from the previous workout
   activeWorkout.value = true;
   localStorage.setItem('exercises', JSON.stringify(exercises.value));
-  localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout));
+  localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout.value));
   localStorage.setItem('startTime', JSON.stringify(startTime));
 };
 
@@ -128,7 +128,7 @@ const stopWorkout = () => {
   // exercises.value = [];
   // duration = Date.now() - startTime;
   activeWorkout.value = false;
-  localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout));
+  localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout.value));
 };
 
 const startTimer = () => {
