@@ -64,17 +64,20 @@ const time = ref(0);
 const interval = ref(null);
 const exerciseName = ref('');
 
-let startTime = null;
+let startTime = ref(null);
 let activeWorkout = ref(false);
 
-const addExercise = (exerciseName) => {
+const addExercise = (name) => {
+  if (!name.trim()) return; // Prevent adding empty exercises
+
   const exercise = {
-    exerciseName: exerciseName,
+    exerciseName: name.trim(),
     sets: [],
   };
 
   exercises.value.push(exercise);
   addSet(exercise);
+  exerciseName.value = '';
 };
 
 const deleteExercise = (id) => {
@@ -99,39 +102,39 @@ const saveToLocalStorage = () => {
 const startWorkout = () => {
   startTimer();
   time.value = 0;
-  startTime = Date.now();
+  startTime.value = Date.now();
   exercises.value = []; // as a new workout is started, discard the current exercises from the previous workout
   activeWorkout.value = true;
   localStorage.setItem('exercises', JSON.stringify(exercises.value));
+  saveToLocalStorage();
   localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout.value));
-  localStorage.setItem('startTime', JSON.stringify(startTime));
+  localStorage.setItem('startTime', startTime.value);
 };
 
 const stopWorkout = () => {
   stopTimer();
 
-  // const workout = {
-  //   date: new Date().toLocaleString(),
-  //   duration: time.value,
-  //   exercises: exercises.value,
-  // };
+  const workout = {
+    date: startTime.value,
+    duration: time.value,
+    exercises: exercises.value,
+  };
 
-  // let previousWorkouts = localStorage.getItem('previousWorkouts');
-  // // if historic data exists, use it, otherwise create blank array to use
-  // previousWorkouts = previousWorkouts ? JSON.parse(previousWorkouts) : [];
-  // previousWorkouts.push(workout);
-  // localStorage.setItem('previousWorkouts', JSON.stringify(previousWorkouts));
+  let historicWorkouts = localStorage.getItem('historicWorkouts');
+  // if historic data exists, use it, otherwise create blank array to use
+  historicWorkouts = historicWorkouts ? JSON.parse(historicWorkouts) : [];
+  historicWorkouts.push(workout);
+  localStorage.setItem('historicWorkouts', JSON.stringify(historicWorkouts));
 
-  // let previousSets = localStorage.getItem('previousSets');
+  // let historicSets = localStorage.getItem('historicSets');
   // // if historic data exists, use it, otherwise create blank array to use
-  // previousSets = previousSets ? JSON.parse(previousSets) : [];
+  // historicSets = historicSets ? JSON.parse(historicSets) : [];
   // // pushes with spread, this means that the arrays are combined
-  // previousSets.push(...sets);
-  // localStorage.setItem('previousSets', JSON.stringify(previousSets));
+  // historicSets.push(...sets);
+  // localStorage.setItem('historicSets', JSON.stringify(historicSets));
 
   // time.value = 0;
   // exercises.value = [];
-  // duration = Date.now() - startTime;
   activeWorkout.value = false;
   localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout.value));
 };
@@ -168,7 +171,8 @@ onMounted(() => {
   }
   const savedStartTime = localStorage.getItem('startTime');
   if (savedStartTime) {
-    time.value = Math.floor((Date.now() - Number(savedStartTime)) / 1000);
+    startTime.value = Number(savedStartTime);
+    time.value = Math.floor((Date.now() - startTime.value) / 1000);
   }
   const savedActiveWorkout = localStorage.getItem('activeWorkout');
   if (savedActiveWorkout && JSON.parse(savedActiveWorkout)) {
