@@ -115,14 +115,12 @@ const stopWorkout = () => {
   stopTimer();
 
   const workout = {
-    date: startTime.value,
+    dateTime: startTime.value,
     duration: time.value,
     exercises: exercises.value,
   };
 
-  let historicWorkouts = localStorage.getItem('historicWorkouts');
-  // if historic data exists, use it, otherwise create blank array to use
-  historicWorkouts = historicWorkouts ? JSON.parse(historicWorkouts) : [];
+  let historicWorkouts = JSON.parse(localStorage.getItem('historicWorkouts')) || [];
   historicWorkouts.push(workout);
   localStorage.setItem('historicWorkouts', JSON.stringify(historicWorkouts));
 
