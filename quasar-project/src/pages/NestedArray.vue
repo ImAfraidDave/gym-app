@@ -1,37 +1,48 @@
 <template>
   <q-page class="flex flex-center">
-    <q-btn color="primary" label="Start Empty Workout" @click="startWorkout" />
-    <q-btn label="Finish Workout" @click="stopWorkout" />
-    <q-btn label="Start Timer" @click="startTimer" />
-    <q-btn label="Stop Timer" @click="stopTimer" />
-    <q-input v-model="exerciseName" type="text" label="Exercise" />
-    <p>Timer: {{ formattedTime }}</p>
-    <q-card-section>
-      <q-btn :icon="matAdd" @click="addExercise(exerciseName)" />
-      <div v-for="(exercise, id) in exercises" v-bind:key="id">
-        <p>{{ exercise.exerciseName }}</p>
-        <div v-for="(set, index) in exercise.sets" v-bind:key="index">
-          <q-input
-            v-model="set.reps"
-            type="number"
-            label="Reps"
-            min="0"
-            step="1"
-            @update:model-value="saveToLocalStorage"
-          />
-          <q-input
-            v-model="set.weight"
-            type="number"
-            label="Weight (kg)"
-            min="0"
-            @update:model-value="saveToLocalStorage"
-          />
-          <q-btn :icon="matDelete" @click="deleteSet(exercise, index)" />
+    <q-card>
+      <section class="workoutOptions">
+        <q-btn color="primary" label="Start Empty Workout" @click="startWorkout" />
+        <q-btn label="Finish Workout" @click="stopWorkout" />
+        <q-btn label="Start Timer" @click="startTimer" />
+        <q-btn label="Stop Timer" @click="stopTimer" />
+        <q-input v-model="exerciseName" type="text" label="Exercise" />
+        <q-btn :icon="matAdd" label="Add Exercise" @click="addExercise(exerciseName)" />
+        <p>Timer: {{ formattedTime }}</p>
+      </section>
+      <section class="workoutSection">
+        <div v-for="(exercise, id) in exercises" v-bind:key="id">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">{{ exercise.exerciseName }}</div>
+            </q-card-section>
+            <q-separator />
+            <div v-for="(set, index) in exercise.sets" v-bind:key="index">
+              <q-card-actions vertical>
+                <q-input
+                  v-model="set.reps"
+                  type="number"
+                  label="Reps"
+                  min="0"
+                  step="1"
+                  @update:model-value="saveToLocalStorage"
+                />
+                <q-input
+                  v-model="set.weight"
+                  type="number"
+                  label="Weight (kg)"
+                  min="0"
+                  @update:model-value="saveToLocalStorage"
+                />
+              </q-card-actions>
+              <q-btn :icon="matDelete" @click="deleteSet(exercise, index)" />
+            </div>
+            <q-btn :icon="matAdd" label="Add Set" @click="addSet(exercise)" />
+            <q-btn :icon="matDelete" label="Delete Exercise" @click="deleteExercise(id)" />
+          </q-card>
         </div>
-        <q-btn :icon="matAdd" label="Add Set" @click="addSet(exercise)" />
-        <q-btn :icon="matDelete" label="Delete Exercise" @click="deleteExercise(id)" />
-      </div>
-    </q-card-section>
+      </section>
+    </q-card>
   </q-page>
 </template>
 
@@ -101,8 +112,8 @@ const stopWorkout = () => {
   // previousSets.push(...sets);
   // localStorage.setItem('previousSets', JSON.stringify(previousSets));
 
-  time.value = 0;
-  exercises.value = [];
+  // time.value = 0;
+  // exercises.value = [];
 };
 
 const startTimer = () => {
