@@ -94,6 +94,7 @@ const startWorkout = () => {
   startTime = Date.now();
   exercises.value = []; // as a new workout is started, discard the current exercises from the previous workout
   activeWorkout = true;
+  localStorage.setItem('exercises', null);
   localStorage.setItem('activeWorkout', activeWorkout);
   localStorage.setItem('startTime', startTime);
 };
