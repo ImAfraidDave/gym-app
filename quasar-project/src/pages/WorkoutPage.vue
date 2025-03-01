@@ -2,10 +2,13 @@
   <q-page class="flex flex-center">
     <q-card>
       <section class="workoutOptions">
-        <q-btn color="primary" label="Start Empty Workout" @click="startWorkout" />
-        <q-btn label="Finish Workout" @click="stopWorkout" />
-        <q-btn label="Start Timer" @click="startTimer" />
-        <q-btn label="Stop Timer" @click="stopTimer" />
+        <q-btn label="Finish Workout" v-if="activeWorkout" @click="stopWorkout" />
+        <q-btn
+          color="primary"
+          label="Start Empty Workout"
+          v-if="!activeWorkout"
+          @click="startWorkout"
+        />
         <q-input v-model="exerciseName" type="text" label="Exercise" />
         <q-btn :icon="matAdd" label="Add Exercise" @click="addExercise(exerciseName)" />
         <p>Timer: {{ formattedTime }}</p>
@@ -57,7 +60,7 @@ const interval = ref(null);
 const exerciseName = ref('');
 
 let startTime = null;
-let activeWorkout = false;
+let activeWorkout = ref(false);
 
 const addExercise = (exerciseName) => {
   const exercise = {
@@ -93,7 +96,7 @@ const startWorkout = () => {
   time.value = 0;
   startTime = Date.now();
   exercises.value = []; // as a new workout is started, discard the current exercises from the previous workout
-  activeWorkout = true;
+  activeWorkout.value = true;
   localStorage.setItem('exercises', JSON.stringify(exercises.value));
   localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout));
   localStorage.setItem('startTime', JSON.stringify(startTime));
@@ -124,7 +127,7 @@ const stopWorkout = () => {
   // time.value = 0;
   // exercises.value = [];
   // duration = Date.now() - startTime;
-  activeWorkout = false;
+  activeWorkout.value = false;
   localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout));
 };
 
@@ -164,7 +167,7 @@ onMounted(() => {
   }
   const savedActiveWorkout = localStorage.getItem('activeWorkout');
   if (savedActiveWorkout && JSON.parse(savedActiveWorkout)) {
-    activeWorkout = true;
+    activeWorkout.value = true;
     startTimer();
   }
 });
