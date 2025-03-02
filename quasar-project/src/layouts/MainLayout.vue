@@ -11,14 +11,12 @@
     </q-page-container>
 
     <q-footer>
-      <q-toolbar elevated class="bg-primary text-white">
-        <q-tabs shrink stretch>
-          <q-route-tab :icon="matHome" to="/">Home</q-route-tab>
-          <q-route-tab :icon="matCalendarMonth" to="/history">History</q-route-tab>
-          <q-route-tab :icon="matFitnessCenter" to="/workout">Workout</q-route-tab>
-          <q-route-tab :icon="matTrendingUp" to="/progress">Progress</q-route-tab>
-        </q-tabs>
-      </q-toolbar>
+      <q-tabs shrink stretch>
+        <q-route-tab :icon="matHome" to="/">Home</q-route-tab>
+        <q-route-tab :icon="matCalendarMonth" to="/history">History</q-route-tab>
+        <q-route-tab :icon="matFitnessCenter" to="/workout">Workout</q-route-tab>
+        <q-route-tab :icon="matTrendingUp" to="/progress">Progress</q-route-tab>
+      </q-tabs>
     </q-footer>
   </q-layout>
 </template>
