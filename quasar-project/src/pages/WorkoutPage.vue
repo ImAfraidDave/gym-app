@@ -116,7 +116,7 @@ const stopWorkout = () => {
 
   const workout = {
     dateTime: startTime.value,
-    duration: time.value,
+    duration: Math.round(time.value / 60),
     exercises: exercises.value,
   };
 

@@ -4,7 +4,7 @@
       <div v-for="(workout, id) in pastWorkouts" v-bind:key="id">
         <q-card>
           <q-card-section>
-            <div class="text-h6">{{ convertTimestamp(workout.dateTime) }}</div>
+            <div class="text-p">{{ convertTimestamp(workout.dateTime) }}</div>
             <div class="text-p">{{ workout.duration }}m</div>
           </q-card-section>
           <q-separator />
@@ -31,18 +31,22 @@ import { ref, onMounted } from 'vue';
 const pastWorkouts = ref([]);
 
 /**
- * Converts timestamp to dd/mm/yyyy hh:mm format
+ * Converts timestamp to EEEE, d MMMM yyyy hh:mma format
  */
 function convertTimestamp(timestamp) {
   const date = new Date(timestamp);
 
-  const day = String(date.getDate()).padStart(2, '0'); // gets the day as a number, appends 0 if needed
-  const month = String(date.getMonth()).padStart(2, '0');
-  const year = String(date.getFullYear());
-  const hour = String(date.getHours()).padStart(2, '0');
-  const min = String(date.getMinutes()).padStart(2, '0');
+  const convertedDate = date.toLocaleString('en-NZ', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
 
-  return `${day}/${month}/${year} ${hour}:${min}`;
+  return convertedDate;
 }
 
 onMounted(() => {
