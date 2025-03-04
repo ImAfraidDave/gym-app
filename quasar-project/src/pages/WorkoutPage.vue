@@ -2,7 +2,6 @@
   <q-page class="flex flex-center">
     <q-card>
       <section class="workoutOptions">
-        <q-btn label="Finish Workout" v-if="activeWorkout" @click="stopWorkout" />
         <q-btn
           color="primary"
           label="Start Empty Workout"
@@ -54,6 +53,7 @@
           </q-card>
         </div>
       </section>
+      <q-btn label="Finish Workout" v-if="activeWorkout" @click="stopWorkout" />
     </q-card>
   </q-page>
 </template>
