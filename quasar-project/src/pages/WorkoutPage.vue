@@ -25,28 +25,30 @@
               <div class="text-h6">{{ exercise.exerciseName }}</div>
             </q-card-section>
             <q-separator />
-            <div v-for="(set, index) in exercise.sets" v-bind:key="index">
-              <q-card-actions vertical :class="{ completed: set.completed }">
-                <q-input
-                  v-model="set.reps"
-                  type="number"
-                  label="Reps"
-                  min="0"
-                  step="1"
-                  @update:model-value="saveToLocalStorage"
-                />
-                <q-input
-                  v-model="set.weight"
-                  type="number"
-                  label="Weight (kg)"
-                  min="0"
-                  @update:model-value="saveToLocalStorage"
-                />
-                <q-checkbox v-model="set.completed" />
-                <!-- <q-checkbox v-model="set.completed" @change="toggleSetComplete($event, set)" /> -->
-              </q-card-actions>
+            <q-card-actions
+              v-for="(set, index) in exercise.sets"
+              v-bind:key="index"
+              horizontal
+              :class="{ completed: set.completed, uncompleted: !set.completed }"
+            >
+              <q-input
+                v-model="set.reps"
+                type="number"
+                label="Reps"
+                min="0"
+                step="1"
+                @update:model-value="saveToLocalStorage"
+              />
+              <q-input
+                v-model="set.weight"
+                type="number"
+                label="Weight (kg)"
+                min="0"
+                @update:model-value="saveToLocalStorage"
+              />
+              <q-checkbox v-model="set.completed" />
               <q-btn :icon="matDelete" @click="deleteSet(exercise, index)" />
-            </div>
+            </q-card-actions>
             <q-btn :icon="matAdd" label="Add Set" @click="addSet(exercise)" />
             <q-btn :icon="matDelete" label="Delete Exercise" @click="deleteExercise(id)" />
           </q-card>
