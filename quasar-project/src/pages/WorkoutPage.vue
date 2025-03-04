@@ -26,7 +26,7 @@
             </q-card-section>
             <q-separator />
             <div v-for="(set, index) in exercise.sets" v-bind:key="index">
-              <q-card-actions vertical>
+              <q-card-actions vertical :class="{ completed: set.completed }">
                 <q-input
                   v-model="set.reps"
                   type="number"
@@ -42,6 +42,8 @@
                   min="0"
                   @update:model-value="saveToLocalStorage"
                 />
+                <q-checkbox v-model="set.completed" />
+                <!-- <q-checkbox v-model="set.completed" @change="toggleSetComplete($event, set)" /> -->
               </q-card-actions>
               <q-btn :icon="matDelete" @click="deleteSet(exercise, index)" />
             </div>
@@ -86,7 +88,7 @@ const deleteExercise = (id) => {
 };
 
 const addSet = (exercise) => {
-  exercise.sets.push({ reps: '', weight: '' });
+  exercise.sets.push({ reps: '', weight: '', completed: false });
   saveToLocalStorage();
 };
 
@@ -94,6 +96,12 @@ const deleteSet = (exercise, index) => {
   exercise.sets.splice(index, 1);
   saveToLocalStorage();
 };
+
+// function toggleSetComplete(event, set) {
+//   if (set.completed) {
+
+//   }
+// }
 
 const saveToLocalStorage = () => {
   localStorage.setItem('exercises', JSON.stringify(exercises.value));

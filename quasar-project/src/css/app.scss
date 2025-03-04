@@ -1,1 +1,5 @@
 // app global css in SCSS form
+.completed {
+  background-color: $positive;
+  transition: background-color 0.25s ease;
+}
