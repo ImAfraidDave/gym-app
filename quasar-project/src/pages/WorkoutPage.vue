@@ -63,6 +63,20 @@ import { matDelete, matAdd } from '@quasar/extras/material-icons';
 
 import { ref, computed, onMounted } from 'vue';
 
+import { useStorageFactory } from 'src/composables/storageFactory';
+
+const storage = useStorageFactory();
+
+const {
+  loadExercises,
+  saveExercises,
+  loadActiveWorkout,
+  saveActiveWorkout,
+  loadStartTime,
+  saveStartTime,
+  saveHistoricWorkout,
+} = storage;
+
 const exercises = ref([]);
 const time = ref(0);
 const interval = ref(null);
@@ -113,12 +127,13 @@ const startWorkout = () => {
   startTimer();
   time.value = 0;
   startTime.value = Date.now();
-  exercises.value = []; // as a new workout is started, discard the current exercises from the previous workout
+
+  exercises.value = [];
   activeWorkout.value = true;
-  localStorage.setItem('exercises', JSON.stringify(exercises.value));
-  saveToLocalStorage();
-  localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout.value));
-  localStorage.setItem('startTime', startTime.value);
+
+  saveExercises(exercises.value);
+  saveStartTime(startTime.value);
+  saveActiveWorkout(true);
 };
 
 const stopWorkout = () => {
@@ -130,21 +145,9 @@ const stopWorkout = () => {
     exercises: exercises.value,
   };
 
-  let historicWorkouts = JSON.parse(localStorage.getItem('historicWorkouts')) || [];
-  historicWorkouts.push(workout);
-  localStorage.setItem('historicWorkouts', JSON.stringify(historicWorkouts));
-
-  // let historicSets = localStorage.getItem('historicSets');
-  // // if historic data exists, use it, otherwise create blank array to use
-  // historicSets = historicSets ? JSON.parse(historicSets) : [];
-  // // pushes with spread, this means that the arrays are combined
-  // historicSets.push(...sets);
-  // localStorage.setItem('historicSets', JSON.stringify(historicSets));
-
-  // time.value = 0;
-  // exercises.value = [];
+  saveHistoricWorkout(workout);
   activeWorkout.value = false;
-  localStorage.setItem('activeWorkout', JSON.stringify(activeWorkout.value));
+  saveActiveWorkout(false);
 };
 
 const startTimer = () => {
@@ -173,17 +176,15 @@ function formatTime(totalSeconds) {
 const formattedTime = computed(() => formatTime(time.value));
 
 onMounted(() => {
-  const savedExercises = localStorage.getItem('exercises');
-  if (savedExercises) {
-    exercises.value = JSON.parse(savedExercises);
-  }
-  const savedStartTime = localStorage.getItem('startTime');
-  if (savedStartTime) {
-    startTime.value = Number(savedStartTime);
+  exercises.value = loadExercises();
+  const savedStart = loadStartTime();
+
+  if (savedStart) {
+    startTime.value = savedStart;
     time.value = Math.floor((Date.now() - startTime.value) / 1000);
   }
-  const savedActiveWorkout = localStorage.getItem('activeWorkout');
-  if (savedActiveWorkout && JSON.parse(savedActiveWorkout)) {
+
+  if (loadActiveWorkout()) {
     activeWorkout.value = true;
     startTimer();
   }
