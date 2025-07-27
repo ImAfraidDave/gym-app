@@ -22,7 +22,8 @@
             </q-card-section>
             <q-separator />
             <q-card-section style="max-height: 50vh" class="scroll">
-              <q-input v-model="exerciseFilter" type="text" label="Search" />
+              <q-input v-model="exerciseNameFilter" type="text" label="Search" />
+              <q-input v-model="musclesWorkedFilter" type="text" label="Muscles Worked" />
               <q-list bordered>
                 <q-virtual-scroll :items="filteredExerciseList" separator>
                   <template v-slot="{ item: exercise }">
@@ -121,19 +122,26 @@ const interval = ref(null);
 let startTime = ref(null);
 let activeWorkout = ref(false);
 
-const exerciseFilter = ref('');
+const exerciseNameFilter = ref('');
+const musclesWorkedFilter = ref('');
 const exerciseList = ref(exerciseData);
 // Case-insensitive check exercises match filter
-function matchesFilter(exercise, filter) {
+function filterByName(exercise, filter) {
   const name = exercise.name.toLowerCase();
+  return name.includes(filter);
+}
+function filterByMusclesWorked(exercise, filter) {
   const bodyParts = exercise.bodyParts.join(', ').toLowerCase();
-  return name.includes(filter) || bodyParts.includes(filter);
+  return bodyParts.includes(filter);
 }
 // filter the exercises based on search input
 const filteredExerciseList = computed(() => {
-  const filter = exerciseFilter.value.trim().toLowerCase();
-  if (!filter) return exerciseList.value;
-  return exerciseList.value.filter((ex) => matchesFilter(ex, filter));
+  const nameFilter = exerciseNameFilter.value.trim().toLowerCase();
+  const musclesFilter = musclesWorkedFilter.value.trim().toLowerCase();
+
+  return exerciseList.value
+    .filter((ex) => !nameFilter || filterByName(ex, nameFilter))
+    .filter((ex) => !musclesFilter || filterByMusclesWorked(ex, musclesFilter));
 });
 
 let selectedExercises = ref([]); // collection of what exercises to add to the workout
