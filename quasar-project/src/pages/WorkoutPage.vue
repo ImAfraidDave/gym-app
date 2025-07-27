@@ -160,8 +160,11 @@ function toggleSelection(exercise) {
   }
 }
 
+// clear the selected exercises, and the fields of the search filters
 function clearSelectedExercises() {
   selectedExercises.value = [];
+  exerciseNameFilter.value = '';
+  musclesWorkedFilter.value = '';
 }
 
 function addSelectedExercises() {
