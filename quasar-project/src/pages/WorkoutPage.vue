@@ -14,29 +14,34 @@
           @click="selectExercise = true"
           v-if="activeWorkout"
         />
-        <q-dialog v-model="selectExercise">
+
+        <q-dialog v-model="selectExercise" transition-show="none" transition-hide="none">
           <q-card>
             <q-card-section>
               <div class="text-h6">Add Exercise</div>
             </q-card-section>
             <q-separator />
             <q-card-section style="max-height: 50vh" class="scroll">
+              <q-input v-model="exerciseFilter" type="text" label="Search" />
               <q-list bordered>
-                <q-item
-                  v-for="exercise in exerciseList"
-                  v-bind:key="exercise.exerciseId"
-                  clickable
-                  @click="toggleSelection(exercise)"
-                  :active="isSelected(exercise)"
-                >
-                  <q-item-section avatar top>
-                    <q-checkbox v-model="selectedExercises" :val="exercise"></q-checkbox>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>{{ exercise.name }}</q-item-label>
-                    <q-item-label caption>{{ exercise.bodyParts.join(', ') }}</q-item-label>
-                  </q-item-section>
-                </q-item>
+                <q-virtual-scroll :items="filteredExerciseList" separator>
+                  <template v-slot="{ item: exercise }">
+                    <q-item
+                      :key="exercise.exerciseId"
+                      clickable
+                      @click="toggleSelection(exercise)"
+                      :active="selectedSet.has(exercise.exerciseId)"
+                    >
+                      <q-item-section avatar top>
+                        <!-- <q-checkbox v-model="selectedExercises" :val="exercise"></q-checkbox> -->
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>{{ exercise.name }}</q-item-label>
+                        <q-item-label caption>{{ exercise.bodyParts.join(', ') }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-virtual-scroll>
               </q-list>
             </q-card-section>
             <q-separator />
@@ -94,6 +99,8 @@ import { matDelete, matAdd } from '@quasar/extras/material-icons';
 import { ref, computed, onMounted } from 'vue';
 import { useStorageFactory } from 'src/composables/storageFactory';
 
+import exerciseData from 'src/data/exercises.json';
+
 const storage = useStorageFactory();
 
 const {
@@ -106,8 +113,6 @@ const {
   saveHistoricWorkout,
 } = storage;
 
-import exerciseList from '../data/exercises.json';
-
 const selectExercise = ref(false);
 const exercises = ref([]);
 const time = ref(0);
@@ -116,18 +121,35 @@ const interval = ref(null);
 let startTime = ref(null);
 let activeWorkout = ref(false);
 
-let selectedExercises = ref([]); // collection of what exercises to add to the workout
-function toggleSelection(exercise) {
-  const index = selectedExercises.value.findIndex((e) => e.exerciseId === exercise.exerciseId);
-  if (index === -1) {
-    selectedExercises.value.push(exercise);
-  } else {
-    selectedExercises.value.splice(index, 1);
-  }
+const exerciseFilter = ref('');
+const exerciseList = ref(exerciseData);
+// Case-insensitive check exercises match filter
+function matchesFilter(exercise, filter) {
+  const name = exercise.name.toLowerCase();
+  const bodyParts = exercise.bodyParts.join(', ').toLowerCase();
+  return name.includes(filter) || bodyParts.includes(filter);
 }
+// filter the exercises based on search input
+const filteredExerciseList = computed(() => {
+  const filter = exerciseFilter.value.trim().toLowerCase();
+  if (!filter) return exerciseList.value;
+  return exerciseList.value.filter((ex) => matchesFilter(ex, filter));
+});
 
-function isSelected(exercise) {
-  return selectedExercises.value.some((e) => e.exerciseId === exercise.exerciseId);
+let selectedExercises = ref([]); // collection of what exercises to add to the workout
+const selectedSet = computed(() => {
+  return new Set(selectedExercises.value.map((e) => e.exerciseId));
+});
+
+function toggleSelection(exercise) {
+  const exists = selectedExercises.value.find((e) => e.exerciseId === exercise.exerciseId);
+  if (exists) {
+    selectedExercises.value = selectedExercises.value.filter(
+      (e) => e.exerciseId !== exercise.exerciseId,
+    );
+  } else {
+    selectedExercises.value.push(exercise);
+  }
 }
 
 function clearSelectedExercises() {
