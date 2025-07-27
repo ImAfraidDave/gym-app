@@ -8,13 +8,44 @@
           v-if="!activeWorkout"
           @click="startWorkout"
         />
-        <q-input v-model="exerciseName" type="text" label="Exercise" v-if="activeWorkout" />
         <q-btn
           :icon="matAdd"
           label="Add Exercise"
-          @click="addExercise(exerciseName)"
+          @click="selectExercise = true"
           v-if="activeWorkout"
         />
+        <q-dialog v-model="selectExercise">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">Add Exercise</div>
+            </q-card-section>
+            <q-separator />
+            <q-card-section style="max-height: 50vh" class="scroll">
+              <q-list bordered>
+                <q-item
+                  v-for="exercise in exerciseList"
+                  v-bind:key="exercise.exerciseId"
+                  clickable
+                  @click="toggleSelection(exercise)"
+                  :active="isSelected(exercise)"
+                >
+                  <q-item-section avatar top>
+                    <q-checkbox v-model="selectedExercises" :val="exercise"></q-checkbox>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ exercise.name }}</q-item-label>
+                    <q-item-label caption>{{ exercise.bodyParts.join(', ') }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+            <q-separator />
+            <q-card-actions>
+              <q-btn label="Add Selected" v-close-popup @click="addSelectedExercises"> </q-btn>
+              <q-btn label="Cancel" v-close-popup @click="clearSelectedExercises"> </q-btn>
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
         <p v-if="activeWorkout">Timer: {{ formattedTime }}</p>
       </section>
       <section class="workoutSection" v-if="activeWorkout">
@@ -60,9 +91,7 @@
 
 <script setup>
 import { matDelete, matAdd } from '@quasar/extras/material-icons';
-
 import { ref, computed, onMounted } from 'vue';
-
 import { useStorageFactory } from 'src/composables/storageFactory';
 
 const storage = useStorageFactory();
@@ -77,13 +106,40 @@ const {
   saveHistoricWorkout,
 } = storage;
 
+import exerciseList from '../data/exercises.json';
+
+const selectExercise = ref(false);
 const exercises = ref([]);
 const time = ref(0);
 const interval = ref(null);
-const exerciseName = ref('');
 
 let startTime = ref(null);
 let activeWorkout = ref(false);
+
+let selectedExercises = ref([]); // collection of what exercises to add to the workout
+function toggleSelection(exercise) {
+  const index = selectedExercises.value.findIndex((e) => e.exerciseId === exercise.exerciseId);
+  if (index === -1) {
+    selectedExercises.value.push(exercise);
+  } else {
+    selectedExercises.value.splice(index, 1);
+  }
+}
+
+function isSelected(exercise) {
+  return selectedExercises.value.some((e) => e.exerciseId === exercise.exerciseId);
+}
+
+function clearSelectedExercises() {
+  selectedExercises.value = [];
+}
+
+function addSelectedExercises() {
+  for (const exercise of selectedExercises.value) {
+    addExercise(exercise.name);
+  }
+  clearSelectedExercises();
+}
 
 const addExercise = (name) => {
   if (!name.trim()) return; // Prevent adding empty exercises
@@ -95,7 +151,6 @@ const addExercise = (name) => {
 
   exercises.value.push(exercise);
   addSet(exercise);
-  exerciseName.value = '';
 };
 
 const deleteExercise = (id) => {
