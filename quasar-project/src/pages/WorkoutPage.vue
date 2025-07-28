@@ -140,7 +140,9 @@ function filterByMusclesWorked(exercise, filter) {
 // filter the exercises based on search input
 const filteredExerciseList = computed(() => {
   const nameFilter = exerciseNameFilter.value.trim().toLowerCase();
-  const musclesFilter = musclesWorkedFilter.value.trim().toLowerCase();
+  const musclesFilter = musclesWorkedFilter.value
+    ? musclesWorkedFilter.value.trim().toLowerCase()
+    : '';
 
   return exerciseList.value
     .filter((ex) => !nameFilter || filterByName(ex, nameFilter))
