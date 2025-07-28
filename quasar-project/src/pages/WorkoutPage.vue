@@ -19,13 +19,18 @@
           <q-card>
             <q-card-section>
               <div class="text-h6">Add Exercise</div>
+              <q-input v-model="exerciseNameFilter" type="text" label="Search" />
+              <q-select
+                v-model="musclesWorkedFilter"
+                :options="muscleOptions"
+                label="Muscles Worked"
+                clearable
+              />
             </q-card-section>
             <q-separator />
             <q-card-section style="max-height: 50vh" class="scroll">
-              <q-input v-model="exerciseNameFilter" type="text" label="Search" />
-              <q-input v-model="musclesWorkedFilter" type="text" label="Muscles Worked" />
               <q-list bordered>
-                <q-virtual-scroll :items="filteredExerciseList" separator>
+                <q-virtual-scroll :items="filteredExerciseList" :item-size="50" separator>
                   <template v-slot="{ item: exercise }">
                     <q-item
                       :key="exercise.exerciseId"
@@ -33,9 +38,6 @@
                       @click="toggleSelection(exercise)"
                       :active="selectedSet.has(exercise.exerciseId)"
                     >
-                      <q-item-section avatar top>
-                        <!-- <q-checkbox v-model="selectedExercises" :val="exercise"></q-checkbox> -->
-                      </q-item-section>
                       <q-item-section>
                         <q-item-label>{{ exercise.name }}</q-item-label>
                         <q-item-label caption>{{ exercise.bodyParts.join(', ') }}</q-item-label>
@@ -101,6 +103,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useStorageFactory } from 'src/composables/storageFactory';
 
 import exerciseData from 'src/data/exercises.json';
+import muscleOptions from 'src/data/muscleOptions.json';
 
 const storage = useStorageFactory();
 
