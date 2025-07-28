@@ -19,7 +19,7 @@
           <q-card>
             <q-card-section>
               <div class="text-h6">Add Exercise</div>
-              <q-input v-model="exerciseNameFilter" type="text" label="Search" />
+              <q-input v-model="exerciseNameFilter" type="text" debounce="300" label="Search" />
               <q-select
                 v-model="musclesWorkedFilter"
                 :options="muscleOptions"
@@ -140,6 +140,7 @@ function filterByMusclesWorked(exercise, filter) {
 // filter the exercises based on search input
 const filteredExerciseList = computed(() => {
   const nameFilter = exerciseNameFilter.value.trim().toLowerCase();
+  // if no option is selected for the muscle filter, apply an empty filter
   const musclesFilter = musclesWorkedFilter.value
     ? musclesWorkedFilter.value.trim().toLowerCase()
     : '';
@@ -165,18 +166,19 @@ function toggleSelection(exercise) {
   }
 }
 
-// clear the selected exercises, and the fields of the search filters
+// unselect all exercises in the exercise selection dialog, and reset the search filters
 function clearSelectedExercises() {
   selectedExercises.value = [];
   exerciseNameFilter.value = '';
   musclesWorkedFilter.value = '';
 }
 
+// add all exercises selected in the dialog modal to the workout
 function addSelectedExercises() {
   for (const exercise of selectedExercises.value) {
     addExercise(exercise.name);
   }
-  clearSelectedExercises();
+  clearSelectedExercises(); // unselect the exercises after adding them
 }
 
 const addExercise = (name) => {
