@@ -42,6 +42,9 @@
                         <q-item-label>{{ exercise.name }}</q-item-label>
                         <q-item-label caption>{{ exercise.bodyParts.join(', ') }}</q-item-label>
                       </q-item-section>
+                      <q-item-section>
+                        <q-btn @click.stop="showExerciseInfoDialog(exercise)" label="?" />
+                      </q-item-section>
                     </q-item>
                   </template>
                 </q-virtual-scroll>
@@ -57,10 +60,14 @@
         <p v-if="activeWorkout">Timer: {{ formattedTime }}</p>
       </section>
       <section class="workoutSection" v-if="activeWorkout">
-        <div v-for="(exercise, id) in exercises" v-bind:key="id">
+        <div v-for="(exercise, id) in exercises" :key="exercise.exerciseId">
           <q-card>
             <q-card-section>
-              <div class="text-h6">{{ exercise.exerciseName }}</div>
+              <div class="text-h6">{{ exercise.name }}</div>
+              <q-btn
+                @click.stop="showExerciseInfoDialog(getExerciseById(exercise.exerciseId))"
+                label="?"
+              />
             </q-card-section>
             <q-separator />
             <q-card-actions
@@ -101,9 +108,11 @@
 import { matDelete, matAdd } from '@quasar/extras/material-icons';
 import { ref, computed, onMounted } from 'vue';
 import { useStorageFactory } from 'src/composables/storageFactory';
-
+import { Dialog } from 'quasar';
+import ExerciseInfoDialog from 'src/components/ExerciseInfoDialog.vue';
 import exerciseData from 'src/data/exercises.json';
 import muscleOptions from 'src/data/muscleOptions.json';
+import { getExerciseById } from 'src/composables/exerciseLoader';
 
 const storage = useStorageFactory();
 
@@ -124,6 +133,15 @@ const interval = ref(null);
 
 let startTime = ref(null);
 let activeWorkout = ref(false);
+
+function showExerciseInfoDialog(exercise) {
+  Dialog.create({
+    component: ExerciseInfoDialog,
+    componentProps: {
+      exercise,
+    },
+  });
+}
 
 const exerciseNameFilter = ref('');
 const musclesWorkedFilter = ref('');
@@ -176,16 +194,17 @@ function clearSelectedExercises() {
 // add all exercises selected in the dialog modal to the workout
 function addSelectedExercises() {
   for (const exercise of selectedExercises.value) {
-    addExercise(exercise.name);
+    addExercise(exercise.exerciseId, exercise.name);
   }
   clearSelectedExercises(); // unselect the exercises after adding them
 }
 
-const addExercise = (name) => {
+const addExercise = (exerciseId, name) => {
   if (!name.trim()) return; // Prevent adding empty exercises
 
   const exercise = {
-    exerciseName: name.trim(),
+    exerciseId,
+    name: name.trim(),
     sets: [],
   };
 
