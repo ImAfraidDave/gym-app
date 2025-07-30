@@ -42,9 +42,9 @@
                         <q-item-label>{{ exercise.name }}</q-item-label>
                         <q-item-label caption>{{ exercise.bodyParts.join(', ') }}</q-item-label>
                       </q-item-section>
-                      <q-item-section>
+                      <q-item-actions>
                         <q-btn @click.stop="showExerciseInfoDialog(exercise)" label="?" />
-                      </q-item-section>
+                      </q-item-actions>
                     </q-item>
                   </template>
                 </q-virtual-scroll>
@@ -52,8 +52,13 @@
             </q-card-section>
             <q-separator />
             <q-card-actions>
-              <q-btn label="Add Selected" v-close-popup @click="addSelectedExercises"> </q-btn>
-              <q-btn label="Cancel" v-close-popup @click="clearSelectedExercises"> </q-btn>
+              <q-btn
+                label="Add Selected"
+                v-close-popup
+                @click="addSelectedExercises"
+                :disable="selectedExercises.length === 0"
+              />
+              <q-btn label="Cancel" v-close-popup @click="clearSelectedExercises" />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -63,11 +68,13 @@
         <div v-for="(exercise, id) in exercises" :key="exercise.exerciseId">
           <q-card>
             <q-card-section>
-              <div class="text-h6">{{ exercise.name }}</div>
-              <q-btn
-                @click.stop="showExerciseInfoDialog(getExerciseById(exercise.exerciseId))"
-                label="?"
-              />
+              <div class="text-h6">
+                {{ exercise.name }}
+                <q-btn
+                  @click.stop="showExerciseInfoDialog(getExerciseById(exercise.exerciseId))"
+                  label="?"
+                />
+              </div>
             </q-card-section>
             <q-separator />
             <q-card-actions
