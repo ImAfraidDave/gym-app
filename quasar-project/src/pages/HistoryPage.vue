@@ -13,7 +13,7 @@
             v-bind:key="exerciseId"
           >
             <q-card>
-              <div class="text-h6">{{ exercise.exerciseName }}</div>
+              <div class="text-h6">{{ exercise.name }}</div>
               <q-separator />
               <ul v-for="(set, index) in exercise.sets" v-bind:key="index">
                 <li>{{ set.reps }} x {{ set.weight }}kg</li>
