@@ -42,9 +42,9 @@
                         <q-item-label>{{ exercise.name }}</q-item-label>
                         <q-item-label caption>{{ exercise.bodyParts.join(', ') }}</q-item-label>
                       </q-item-section>
-                      <q-item-actions>
+                      <q-item-section>
                         <q-btn @click.stop="showExerciseInfoDialog(exercise)" label="?" />
-                      </q-item-actions>
+                      </q-item-section>
                     </q-item>
                   </template>
                 </q-virtual-scroll>
@@ -68,11 +68,13 @@
         <div v-for="(exercise, id) in exercises" :key="exercise.exerciseId">
           <q-card>
             <q-card-section>
-              <div class="text-h6">
-                {{ exercise.name }}
+              <div class="text-h6 row items-center justify-between">
+                <span>{{ exercise.name }}</span>
                 <q-btn
                   @click.stop="showExerciseInfoDialog(getExerciseById(exercise.exerciseId))"
                   label="?"
+                  round
+                  dense
                 />
               </div>
             </q-card-section>
@@ -221,17 +223,17 @@ const addExercise = (exerciseId, name) => {
 
 const deleteExercise = (id) => {
   exercises.value.splice(id, 1);
-  saveToLocalStorage();
+  saveExercises(exercises);
 };
 
 const addSet = (exercise) => {
   exercise.sets.push({ reps: '', weight: '', completed: false });
-  saveToLocalStorage();
+  saveExercises(exercises);
 };
 
 const deleteSet = (exercise, index) => {
   exercise.sets.splice(index, 1);
-  saveToLocalStorage();
+  saveExercises(exercises);
 };
 
 // function toggleSetComplete(event, set) {
@@ -239,10 +241,6 @@ const deleteSet = (exercise, index) => {
 
 //   }
 // }
-
-const saveToLocalStorage = () => {
-  localStorage.setItem('exercises', JSON.stringify(exercises.value));
-};
 
 const startWorkout = () => {
   startTimer();

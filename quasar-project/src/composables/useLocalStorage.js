@@ -16,7 +16,7 @@ export function useLocalStorage() {
   };
 
   const loadStartTime = () => {
-    return Number(localStorage.getItem('exercises')) || null;
+    return Number(localStorage.getItem('startTime')) || null;
   };
 
   const saveStartTime = (time) => {

@@ -4,6 +4,10 @@ A WIP gym app that plans to track workout/fitness data, and provide the user wit
 
 Created using Vue and Quasar.
 
+## How to Use
+
+run ``quasar dev`` from the terminal
+
 <img src="quasar-project/public/example.png" alt="exercise selection" width="400"/>
 
 <img src="quasar-project/public/example_2.png" alt="exercise selection" width="400"/>
