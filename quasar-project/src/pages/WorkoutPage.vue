@@ -272,7 +272,7 @@ const stopWorkout = () => {
 const startTimer = () => {
   if (interval.value) clearInterval(interval.value);
   interval.value = setInterval(() => {
-    time.value += 1;
+    time.value = Math.floor((Date.now() - startTime.value) / 1000);
   }, 1000);
 };
 
