@@ -231,13 +231,14 @@ const deleteSet = (exercise, index) => {
   exercise.sets.splice(index, 1);
 };
 
-// call saveExercises whenever any changes are made to the list of exercises, any any nested attributes
+// call saveExercises whenever any changes are made to the list of exercises
+// and any nested attributes of exercises
 watch(
   exercises,
   (newVal) => {
     saveExercises(newVal);
   },
-  { deep: true } // changes apply to nested things
+  { deep: true } // watches for any changes to nested attributes too
 )
 
 const startWorkout = () => {

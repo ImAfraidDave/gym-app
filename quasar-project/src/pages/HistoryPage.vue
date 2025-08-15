@@ -16,7 +16,7 @@
               <div class="text-h6">{{ exercise.name }}</div>
               <q-separator />
               <ul v-for="(set, index) in exercise.sets" v-bind:key="index">
-                <li>{{ set.reps }} x {{ set.weight }}kg</li>
+                <li :class="{ 'set-incomplete': !set.completed}">{{ set.reps }} x {{ set.weight }}kg</li>
               </ul>
             </q-card>
           </q-card-section>

@@ -7,3 +7,7 @@
 .uncompleted {
   transition: background-color 0.25s ease;
 }
+
+.set-incomplete {
+  color: $greyed-out
+}
