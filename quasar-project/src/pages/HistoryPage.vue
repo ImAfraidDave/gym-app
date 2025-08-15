@@ -52,7 +52,7 @@ function convertTimestamp(timestamp) {
 onMounted(() => {
   const historicWorkouts = localStorage.getItem('historicWorkouts');
   if (historicWorkouts) {
-    pastWorkouts.value = JSON.parse(historicWorkouts);
+    pastWorkouts.value = JSON.parse(historicWorkouts).reverse();
   }
 });
 </script>
