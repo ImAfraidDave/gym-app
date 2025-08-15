@@ -91,14 +91,12 @@
                 label="Reps"
                 min="0"
                 step="1"
-                @update:model-value="saveExercises(exercises)"
               />
               <q-input
                 v-model="set.weight"
                 type="number"
                 label="Weight (kg)"
                 min="0"
-                @update:model-value="saveExercises(exercises)"
               />
               <q-checkbox v-model="set.completed" />
               <q-btn :icon="matDelete" @click="deleteSet(exercise, index)" />
@@ -115,7 +113,7 @@
 
 <script setup>
 import { matDelete, matAdd } from '@quasar/extras/material-icons';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useStorageFactory } from 'src/composables/storageFactory';
 import { Dialog } from 'quasar';
 import ExerciseInfoDialog from 'src/components/ExerciseInfoDialog.vue';
@@ -223,24 +221,24 @@ const addExercise = (exerciseId, name) => {
 
 const deleteExercise = (id) => {
   exercises.value.splice(id, 1);
-  saveExercises(exercises);
 };
 
 const addSet = (exercise) => {
   exercise.sets.push({ reps: '', weight: '', completed: false });
-  saveExercises(exercises);
 };
 
 const deleteSet = (exercise, index) => {
   exercise.sets.splice(index, 1);
-  saveExercises(exercises);
 };
 
-// function toggleSetComplete(event, set) {
-//   if (set.completed) {
-
-//   }
-// }
+// call saveExercises whenever any changes are made to the list of exercises, any any nested attributes
+watch(
+  exercises,
+  (newVal) => {
+    saveExercises(newVal);
+  },
+  { deep: true } // changes apply to nested things
+)
 
 const startWorkout = () => {
   startTimer();
@@ -250,7 +248,6 @@ const startWorkout = () => {
   exercises.value = [];
   activeWorkout.value = true;
 
-  saveExercises(exercises.value);
   saveStartTime(startTime.value);
   saveActiveWorkout(true);
 };
