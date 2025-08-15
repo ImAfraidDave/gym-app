@@ -91,14 +91,14 @@
                 label="Reps"
                 min="0"
                 step="1"
-                @update:model-value="saveToLocalStorage"
+                @update:model-value="saveExercises(exercises)"
               />
               <q-input
                 v-model="set.weight"
                 type="number"
                 label="Weight (kg)"
                 min="0"
-                @update:model-value="saveToLocalStorage"
+                @update:model-value="saveExercises(exercises)"
               />
               <q-checkbox v-model="set.completed" />
               <q-btn :icon="matDelete" @click="deleteSet(exercise, index)" />

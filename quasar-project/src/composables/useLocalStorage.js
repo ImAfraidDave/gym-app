@@ -1,10 +1,16 @@
 export function useLocalStorage() {
   const loadExercises = () => {
-    return JSON.parse(localStorage.getItem('exercises')) || [];
+    const savedExercises = localStorage.getItem('exercises');
+    if (!savedExercises) return [];
+    try {
+      return JSON.parse(savedExercises);
+    } catch {
+      return [];
+    }
   };
 
   const saveExercises = (exercises) => {
-    localStorage.setItem('exercises', JSON.stringify(exercises));
+    localStorage.setItem('exercises', JSON.stringify(exercises.value));
   };
 
   const loadActiveWorkout = () => {
