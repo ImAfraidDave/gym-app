@@ -11,3 +11,7 @@ run ``quasar dev`` from the terminal
 <img src="quasar-project/public/example.png" alt="exercise selection" width="400"/>
 
 <img src="quasar-project/public/example_2.png" alt="exercise selection" width="400"/>
+
+### Attributions
+
+bell_sound.wav by Benboncan -- https://freesound.org/s/66951/ -- License: Attribution 4.0

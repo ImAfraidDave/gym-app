@@ -1,7 +1,10 @@
 import { ref } from 'vue';
 import { Notify } from 'quasar';
+import { useSound } from '@vueuse/sound';
+import dingSound from '../assets/sounds/bell_sound.wav';
 
 export function useRestTimer(restDuration = 90) {
+  const timerFinishSound = useSound(dingSound, { volume: 0.25 });
   const restTime = ref(0);
   const startTime = ref(0);
   const endTime = ref(0);
@@ -18,6 +21,8 @@ export function useRestTimer(restDuration = 90) {
         restTime.value = timeLeft;
       } else {
         stopRestTimer();
+
+        timerFinishSound.play();
 
         Notify.create({
           message: 'Rest is over!',
