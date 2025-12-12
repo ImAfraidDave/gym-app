@@ -65,6 +65,9 @@
         <p v-if="activeWorkout">Timer: {{ formattedTime }}</p>
       </section>
       <section class="workoutSection" v-if="activeWorkout">
+        <p v-if="restTime > 0">Rest: {{ formatTime(restTime) }}</p>
+        <q-btn v-if="restTime > 0" @click.stop="stopRestTimer"> Stop Timer </q-btn>
+        <q-btn v-if="restTime === 0" @click.stop="startRestTimer()"> Start Timer </q-btn>
         <div v-for="(exercise, id) in exercises" :key="exercise.exerciseId">
           <q-card>
             <q-card-section>
@@ -85,20 +88,12 @@
               horizontal
               :class="{ completed: set.completed, uncompleted: !set.completed }"
             >
-              <q-input
-                v-model="set.reps"
-                type="number"
-                label="Reps"
-                min="0"
-                step="1"
+              <q-input v-model="set.reps" type="number" label="Reps" min="0" step="1" />
+              <q-input v-model="set.weight" type="number" label="Weight (kg)" min="0" />
+              <q-checkbox
+                v-model="set.completed"
+                @update:model-value="(value) => value && startRestTimer()"
               />
-              <q-input
-                v-model="set.weight"
-                type="number"
-                label="Weight (kg)"
-                min="0"
-              />
-              <q-checkbox v-model="set.completed" />
               <q-btn :icon="matDelete" @click="deleteSet(exercise, index)" />
             </q-card-actions>
             <q-btn :icon="matAdd" label="Add Set" @click="addSet(exercise)" />
@@ -132,6 +127,9 @@ const {
   saveStartTime,
   saveHistoricWorkout,
 } = storage;
+
+import { useRestTimer } from 'src/composables/useRestTimer';
+const { restTime, startRestTimer, stopRestTimer } = useRestTimer(90);
 
 const selectExercise = ref(false);
 const exercises = ref([]);
@@ -238,8 +236,8 @@ watch(
   (newVal) => {
     saveExercises(newVal);
   },
-  { deep: true } // watches for any changes to nested attributes too
-)
+  { deep: true }, // watches for any changes to nested attributes too
+);
 
 const startWorkout = () => {
   startTimer();
