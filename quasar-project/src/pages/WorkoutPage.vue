@@ -67,6 +67,8 @@
       <section class="workoutSection" v-if="activeWorkout">
         <p v-if="restTime > 0">Rest: {{ formatTime(restTime) }}</p>
         <q-btn v-if="restTime > 0" @click.stop="stopRestTimer"> Stop Timer </q-btn>
+        <q-btn v-if="restTime > 0" @click.stop="addRestTime(10)"> +10s </q-btn>
+        <q-btn v-if="restTime > 0" @click.stop="subtractRestTime(10)"> -10s </q-btn>
         <q-btn v-if="restTime === 0" @click.stop="startRestTimer()"> Start Timer </q-btn>
         <div v-for="(exercise, id) in exercises" :key="exercise.exerciseId">
           <q-card>
@@ -129,7 +131,7 @@ const {
 } = storage;
 
 import { useRestTimer } from 'src/composables/useRestTimer';
-const { restTime, startRestTimer, stopRestTimer } = useRestTimer(90);
+const { restTime, startRestTimer, stopRestTimer, addRestTime, subtractRestTime } = useRestTimer(90);
 
 const selectExercise = ref(false);
 const exercises = ref([]);
