@@ -14,24 +14,25 @@ export function useRestTimer(restDuration = 90) {
     stopRestTimer(); // if there is currently a running rest timer, stop it
     startTime.value = Date.now();
     endTime.value = startTime.value + duration * 1000;
+    updateRestTime();
+    restInterval.value = setInterval(updateRestTime, 1000);
+  }
 
-    restInterval.value = setInterval(() => {
-      const timeLeft = Math.ceil((endTime.value - Date.now()) / 1000);
-      if (timeLeft > 0) {
-        restTime.value = timeLeft;
-      } else {
-        stopRestTimer();
-
-        timerFinishSound.play();
-
-        Notify.create({
-          message: 'Rest is over!',
-          color: 'green',
-          position: 'top',
-          timeout: 3000,
-        });
-      }
-    }, 1000);
+  function updateRestTime() {
+    const timeLeft = Math.ceil((endTime.value - Date.now()) / 1000);
+    if (timeLeft > 0) {
+      restTime.value = timeLeft;
+    } else {
+      stopRestTimer();
+      restTime.value = 0;
+      timerFinishSound.play();
+      Notify.create({
+        message: 'Rest is over!',
+        color: 'green',
+        position: 'top',
+        timeout: 3000,
+      });
+    }
   }
 
   function stopRestTimer() {
@@ -44,10 +45,12 @@ export function useRestTimer(restDuration = 90) {
 
   function addRestTime(extraSeconds: number) {
     endTime.value += extraSeconds * 1000;
+    updateRestTime();
   }
 
   function subtractRestTime(extraSeconds: number) {
     endTime.value = endTime.value - extraSeconds * 1000;
+    updateRestTime();
   }
 
   return {
