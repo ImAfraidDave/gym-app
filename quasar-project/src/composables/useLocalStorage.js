@@ -1,4 +1,4 @@
-import { debounce } from "lodash"
+import { debounce } from 'lodash';
 
 export function useLocalStorage() {
   const loadExercises = () => {
@@ -13,8 +13,13 @@ export function useLocalStorage() {
 
   // save exercises to local storage. Debounced so multiple changes in a short timeframe won't result in multiple calls
   const saveExercises = debounce((exercises) => {
-      localStorage.setItem('exercises', JSON.stringify(exercises.value))
-  }, 300)
+    if (!Array.isArray(exercises)) return;
+    try {
+      localStorage.setItem('exercises', JSON.stringify(exercises));
+    } catch (err) {
+      console.error('Failed to save exercises:', err);
+    }
+  }, 300);
 
   const loadActiveWorkout = () => {
     return JSON.parse(localStorage.getItem('activeWorkout')) || false;
