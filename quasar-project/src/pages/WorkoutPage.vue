@@ -103,7 +103,11 @@
           </q-card>
         </div>
       </section>
-      <q-btn label="Finish Workout" v-if="activeWorkout" @click="stopWorkout" />
+      <q-btn
+        :label="exercises.length > 0 ? 'Finish Workout' : 'Cancel Workout'"
+        v-if="activeWorkout"
+        @click="stopWorkout"
+      />
     </q-card>
   </q-page>
 </template>
@@ -256,13 +260,16 @@ const startWorkout = () => {
 const stopWorkout = () => {
   stopTimer();
 
-  const workout = {
-    dateTime: startTime.value,
-    duration: Math.round(time.value / 60),
-    exercises: exercises.value,
-  };
+  if (exercises.value.length > 0) {
+    const workout = {
+      dateTime: startTime.value,
+      duration: Math.round(time.value / 60),
+      exercises: exercises.value,
+    };
 
-  saveHistoricWorkout(workout);
+    saveHistoricWorkout(workout);
+  }
+
   activeWorkout.value = false;
   saveActiveWorkout(false);
 };
